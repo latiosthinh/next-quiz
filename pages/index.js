@@ -6,6 +6,7 @@ import Answer from '../components/answer'
 
 export default function Home() {
 	const [id, setId] = useState( 0 )
+	const [checked, setChecked] = useState( false )
 
 	const handleNext = () => {
 		if ( id == questions.length - 1 ) {
@@ -13,6 +14,7 @@ export default function Home() {
 			return
 		}
 
+		setChecked( false )
 		setId( id + 1 )
 	}
 
@@ -26,27 +28,30 @@ export default function Home() {
 			</Head>
 
 			<main className="bg-slate-800 v-screen h-screen text-white flex overflow-hidden">
-				<div className="flex-auto w-1/2 bg-slate-900 h-full overflow-y-auto p-3">
+				{
+					questions[id] &&
+					<>
+					<div className="flex-auto w-1/2 bg-slate-900 h-full overflow-y-auto p-3">
+						<Question key={'question' + id} item={questions[id]} />
+					</div>
+					
+					<div className="flex-auto w-1/2 h-screen flex flex-col overflow-y-auto p-3">
 					{
-						questions[id] && <Question key={'question' + id} item={questions[id]} />
-					}
-				</div>
-				
-				<div className="flex-auto w-1/2 h-screen flex flex-col overflow-y-auto p-3">
-				{questions[id].answerOptions.map((choice, index) => (
-					<Answer 
-						key={'answer' + index} 
-						choice={choice} 
-						choiceName={'answer' + id} 
-						choiceId={'answer-' + index + '/asd'}
-						isCorrect={choice.isCorrect ?? false} />
-				))}
+						questions[id].answerOptions.map((choice, index) => (
+							<Answer 
+								key={'answer-' + index + '/' + id}
+								choice={choice} 
+								choiceName={'answer-' + id} 
+								choiceId={'answer-' + index + '/' + id}
+								isCorrect={choice.isCorrect ?? false} />
+					))}
 
-					<nav>
-						<button className="bg-green-400 px-5 py-2.5 rounded-lg" onClick={handleNext}>Next</button>
-					</nav>
-				</div>
-
+						<nav className="mt-5">
+							<button className="bg-green-400 px-5 py-2.5 rounded-lg" onClick={handleNext}>Next</button>
+						</nav>
+					</div>
+					</>
+				}
 			</main>
 		</>
 	)
